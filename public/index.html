@@ -20,6 +20,20 @@
 
       <button type="submit">Зарегистрироваться</button>
     </form>
+
+    <button id="showUsers" style="margin-top: 15px; padding:10px; width:100%; background:#f44336; color:white; border:none; border-radius:8px; cursor:pointer;">
+      Показать всех пользователей
+    </button>
   </div>
+
+  <script>
+    document.getElementById('showUsers').onclick = function() {
+      const login = prompt("Введите логин:");
+      const password = prompt("Введите пароль:");
+      if (login && password) {
+        window.open(`/users?login=${encodeURIComponent(login)}&password=${encodeURIComponent(password)}`, '_blank');
+      }
+    };
+  </script>
 </body>
 </html>

@@ -1,0 +1,43 @@
+app.get('/users', (req, res) => {
+  const { login, password } = req.query;
+
+  if (login === 'root' && password === '123456789') {
+    const users = fs.existsSync('users.txt') ? fs.readFileSync('users.txt', 'utf-8') : '';
+    const rows = users.split('\n')
+      .filter(line => line.trim() !== '')
+      .map(line => {
+        const cols = line.split(' | ').map(col => col.trim());
+        return `<tr>${cols.map(col => `<td>${col}</td>`).join('')}</tr>`;
+      }).join('');
+
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="ru">
+      <head>
+        <meta charset="UTF-8">
+        <title>Список пользователей</title>
+        <style>
+          body { font-family: Arial; background: #f0f2f5; padding: 30px; }
+          h1 { color: #2d89ef; }
+          table { border-collapse: collapse; width: 100%; background:white; border-radius:8px; overflow:hidden; box-shadow:0 4px 15px rgba(0,0,0,0.2); }
+          th, td { padding: 12px; border-bottom: 1px solid #ddd; text-align:left; }
+          th { background: #2d89ef; color:white; }
+          tr:hover { background:#f1f1f1; }
+          a { display:inline-block; margin-top:15px; text-decoration:none; color:white; background:#2d89ef; padding:10px 20px; border-radius:6px; }
+          a:hover { background:#1a5fcc; }
+        </style>
+      </head>
+      <body>
+        <h1>Список зарегистрированных пользователей</h1>
+        <table>
+          <tr><th>Дата</th><th>Имя</th><th>Email</th><th>Пароль</th></tr>
+          ${rows}
+        </table>
+        <a href="/">⬅ Вернуться на главную</a>
+      </body>
+      </html>
+    `);
+  } else {
+    res.send('<h1>Доступ запрещён!</h1><a href="/">⬅ Вернуться на главную</a>');
+  }
+});
